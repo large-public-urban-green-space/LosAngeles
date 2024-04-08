@@ -1,4 +1,4 @@
-    <!doctype html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -7,7 +7,9 @@
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="css/leaflet.css">
-        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
         <style>
         html, body, #map {
             width: 100%;
@@ -23,6 +25,7 @@
         </div>
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
         <script src="js/leaflet.pattern.js"></script>
         <script src="js/leaflet-hash.js"></script>
@@ -36,7 +39,7 @@
         <script>
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[33.68424018769284,-118.77404011804131],[34.360235516534246,-117.57020691707845]]);
+        }).fitBounds([[33.35630865245579,-118.71250437479877],[34.36030543811669,-117.07059391338268]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -200,6 +203,9 @@
                     <tr>\
                         <td colspan="2">' + (feature.properties['NDVI_hm_av'] !== null ? autolinker.link(feature.properties['NDVI_hm_av'].toLocaleString()) : '') + '</td>\
                     </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['pugs'] !== null ? autolinker.link(feature.properties['pugs'].toLocaleString()) : '') + '</td>\
+                    </tr>\
                 </table>';
             layer.bindPopup(popupContent, {maxHeight: 400});
             var popup = layer.getPopup();
@@ -314,11 +320,26 @@
                 abstract2.show = function () {
                     this._div.classList.remove("abstract");
                     this._div.classList.add("abstract2");
-                    this._div.innerHTML = "27.60% of Los Angeles's estimated 2025 population have access to public urban green space of area ≥1 ha within 500 m pedestrian network distance";
+                    this._div.innerHTML = "30.44% of Los Angele's estimated 2025 population have access to public urban green space of area ≥1 ha within 500 m pedestrian network distance";
                 };
                 abstract2.addTo(map);
         var baseMaps = {};
-        L.control.layers(baseMaps,{'<img src="legend/UGS_LosAngeles_PopGridWithinServiceArea_4.png" /> Access to public urban green space<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of area ≥1 hectare within 500 m<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pedestrian network distance': layer_UGS_LosAngeles_PopGridWithinServiceArea_4,'<img src="legend/PublicUrbanGreenSpace_3.png" /> Public Urban Green Space': layer_PublicUrbanGreenSpace_3,'<img src="legend/UrbanStudyRegion_2.png" /> Urban Study Region': layer_UrbanStudyRegion_2,"ESRI World Imagery": layer_ESRIWorldImagery_1,"OSM Standard": layer_OSMStandard_0,},{collapsed:false}).addTo(map);
+        var overlaysTree = [
+            {label: '<img src="legend/UGS_LosAngeles_PopGridWithinServiceArea_4.png" /> Access to public urban green space<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of area ≥1 hectare within 500 m<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pedestrian network distance', layer: layer_UGS_LosAngeles_PopGridWithinServiceArea_4},
+            {label: '<img src="legend/PublicUrbanGreenSpace_3.png" /> Public Urban Green Space', layer: layer_PublicUrbanGreenSpace_3},
+            {label: '<img src="legend/UrbanStudyRegion_2.png" /> Urban Study Region', layer: layer_UrbanStudyRegion_2},
+            {label: "ESRI World Imagery", layer: layer_ESRIWorldImagery_1},
+            {label: "OSM Standard", layer: layer_OSMStandard_0},]
+        var lay = L.control.layers.tree(null, overlaysTree,{
+            //namedToggle: true,
+            //selectorBack: false,
+            //closedSymbol: '&#8862; &#x1f5c0;',
+            //openedSymbol: '&#8863; &#x1f5c1;',
+            //collapseAll: 'Collapse all',
+            //expandAll: 'Expand all',
+            collapsed: false, 
+        });
+        lay.addTo(map);
         setBounds();
         </script>
     </body>
